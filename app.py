@@ -28,9 +28,9 @@ from sqlalchemy import create_engine, func
 from flask import Flask, jsonify
 
 
-#################################################
+
 # Database Setup
-#################################################
+
 engine = create_engine("sqlite:///Hawaii.sqlite")
 # reflect the database into a new model
 Base = automap_base()
@@ -44,14 +44,14 @@ Measurements = Base.classes.measurement
 # Create our session (link) from Python to the DB
 session = Session(engine)
 
-#################################################
+
 # Flask Setup
-#################################################
+
 app = Flask(__name__)
 
-#################################################
+
 # Flask Routes
-#################################################
+
 @app.route("/")
 def welcome():
     """List all available api routes."""
@@ -74,7 +74,7 @@ def welcome():
         f"- When given the start and the end date (YYYY-MM-DD), calculate the MIN/AVG/MAX temperature for dates between the start and end date inclusive<br/>"
 
     )
-#########################################################################################
+
 
 @app.route("/api/v1.0/precipitation")
 def precipitation():
@@ -98,13 +98,13 @@ def precipitation():
 
     return jsonify(rain_totals)
 
-#########################################################################################
+
 @app.route("/api/v1.0/stations")
 def stations():
     stations_query = session.query(Station.name, Station.station)
     stations = pd.read_sql(stations_query.statement, stations_query.session.bind)
     return jsonify(stations.to_dict())
-#########################################################################################
+
 @app.route("/api/v1.0/tobs")
 def tobs():
     """Return a list of temperatures for prior year"""
@@ -126,7 +126,7 @@ def tobs():
         temperature_totals.append(row)
 
     return jsonify(temperature_totals)
-#########################################################################################
+
 @app.route("/api/v1.0/<start>")
 def trip1(start):
 
@@ -140,7 +140,7 @@ def trip1(start):
     trip = list(np.ravel(trip_data))
     return jsonify(trip)
 
-#########################################################################################
+
 @app.route("/api/v1.0/<start>/<end>")
 def trip2(start,end):
 
@@ -155,9 +155,6 @@ def trip2(start,end):
     trip = list(np.ravel(trip_data))
     return jsonify(trip)
 
-#########################################################################################
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
